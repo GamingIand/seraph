@@ -111,11 +111,16 @@
                 transform: scale(0.95);
             }
 
-            /* Navigation Links */
+            /* Navigation Links & Action Buttons */
             .linkp {
                 margin: 15px 0 35px 0;
                 color: var(--text-muted);
                 font-size: 15px;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
             }
 
             .linkp a {
@@ -127,6 +132,24 @@
             .linkp a:hover {
                 text-decoration: underline;
                 color: #79c0ff;
+            }
+
+            /* Account & Settings Pill Buttons */
+            .nav-pill-btn {
+                background: var(--panel-bg);
+                border: 1px solid var(--border-color);
+                padding: 6px 14px;
+                border-radius: 20px;
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text-main) !important;
+                transition: all 0.2s ease;
+            }
+
+            .nav-pill-btn:hover {
+                border-color: var(--accent-color);
+                background: rgba(88, 166, 255, 0.1);
+                text-decoration: none !important;
             }
 
             /* Section Headers */
@@ -144,63 +167,93 @@
                 padding-bottom: 10px;
             }
 
-            .pinned-container, .button-container {
+            .pinned-container {
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: center;
-                gap: 25px;
+                gap: 20px;
                 padding: 15px;
                 max-width: 1300px;
+            }
+
+            /* Dynamic Auto-Mosaic Grid System */
+            .button-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                grid-auto-rows: 140px;
+                grid-auto-flow: dense;
+                gap: 20px;
+                width: 100%;
+                max-width: 1300px;
+                padding: 15px;
+                justify-content: center;
             }
 
             .button-container a {
                 text-decoration: none;
                 perspective: 1000px;
+                display: block;
             }
 
-            /* Big & Satisfying Game Card Style */
+            /* Automated Sizing Classes Applied via Script */
+            .button-container a.size-sm {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+            .button-container a.size-md {
+                grid-column: span 2;
+                grid-row: span 2;
+            }
+            .button-container a.size-wide {
+                grid-column: span 2;
+                grid-row: span 1;
+            }
+            .button-container a.size-tall {
+                grid-column: span 1;
+                grid-row: span 2;
+            }
+
+            /* Base Game Card Style */
             .button {
-                width: 160px !important;
-                height: 160px !important;
+                width: 100% !important;
+                height: 100% !important;
                 background-size: cover;
                 background-position: center;
-                border-radius: 26px !important;
+                border-radius: 22px !important;
                 position: relative;
                 overflow: hidden;
                 display: flex;
                 flex-direction: column;
                 justify-content: flex-end;
                 align-items: center;
-                /* Springy smooth hover transform */
                 transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease, border-color 0.3s ease;
                 box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
                 border: 2px solid var(--border-color);
             }
 
-            /* Huge Hover Zoom + Lift Effect */
+            /* Hover Zoom + Lift Effect */
             .button:hover {
-                transform: translateY(-10px) scale(1.12);
+                transform: translateY(-8px) scale(1.04);
                 box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(88, 166, 255, 0.3);
                 border-color: var(--accent-color);
                 z-index: 10;
             }
 
-            /* Satisfying Click / Tap Active Bounce / Squish */
             .button:active {
-                transform: translateY(-2px) scale(0.96) !important;
+                transform: translateY(-2px) scale(0.97) !important;
                 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
                 transition: transform 0.1s ease;
             }
 
             .button h2 {
-                font-size: 13px !important;
+                font-size: 12px !important;
                 background: rgba(13, 17, 23, 0.88);
                 backdrop-filter: blur(8px);
                 color: var(--text-main);
                 width: 100%;
                 text-align: center;
                 margin: 0;
-                padding: 10px 0;
+                padding: 8px 0;
                 font-weight: 700;
                 letter-spacing: 0.4px;
                 white-space: nowrap;
@@ -245,11 +298,7 @@
                 box-shadow: 0 0 12px rgba(88, 166, 255, 0.6);
             }
 
-            .pin-button:active, .download-button:active {
-                transform: scale(0.9);
-            }
-
-            /* Ripple Effect Element for Click Satisfaction */
+            /* Ripple Effect Element */
             .ripple {
                 position: absolute;
                 border-radius: 50%;
@@ -284,8 +333,20 @@
                 });
             }
 
-            // Satisfying click ripple particle generator script
+            // Automatically mix up game icon sizes so you don't have to edit thousands of links manually!
             document.addEventListener('DOMContentLoaded', () => {
+                const gameLinks = document.querySelectorAll('.button-container > a');
+                
+                // Distribution weights for different sizes (mostly standard, with some medium, wide, and tall mixed in)
+                const sizes = ['size-sm', 'size-sm', 'size-sm', 'size-md', 'size-wide', 'size-tall'];
+
+                gameLinks.forEach((link, index) => {
+                    // Pick a size pseudo-randomly based on index or random math
+                    const randomSize = sizes[Math.floor(Math.sin(index * 999) * sizes.length + sizes.length) % sizes.length];
+                    link.classList.add(randomSize);
+                });
+
+                // Ripple effect generator for click satisfaction
                 const buttons = document.querySelectorAll('.button');
                 buttons.forEach(btn => {
                     btn.addEventListener('click', function(e) {
@@ -324,11 +385,14 @@
             <button id="random-game-btn">Play Random Game</button>
         </div>
 
+        <!-- Navigation Links including Account & Settings Buttons -->
         <p class="linkp">
             <a href="../index.html">homepage</a> • 
             <a href="https://github.com/GamingIand" target="_blank">github</a> • 
             <a href="https://discord.gg/aZJyeDMXuy" target="_blank">discord</a> • 
-            <a id="openBlankLink" style="cursor: pointer;">open blank</a>
+            <a id="openBlankLink" style="cursor: pointer;">open blank</a> •
+            <a href="account.html" class="nav-pill-btn">Account</a>
+            <a href="settings.html" class="nav-pill-btn">Settings</a>
         </p>
 
         <h2 class="pinned-header">Starred Games</h2>
